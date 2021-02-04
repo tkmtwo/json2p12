@@ -1,0 +1,51 @@
+= json2p12
+:source-highlighter: coderay
+
+
+== The environment
+
+This Docker image provides:
+
+* Ubuntu latest
+* jq
+* curl
+* OpenSSL
+
+
+
+== How to use it
+
+Just run:
+
+[source,bash]
+----
+docker run -it -v <your directory>:/keyfiles/ tkmtwo/json2p12
+----
+
+Docker maps your directory with [path]_/keyfiles_ directory in the container.
+
+After you start the container, you can use `json2p12` to convert.
+
+
+* To run json2p12 on an input JSON file:
++
+[source,bash]
+----
+json2p12 mykey.json
+----
+
+Three new files will be created:
+[source,text]
+----
+
+mykey.cert
+mykey.key
+mykey.p12
+
+----
+
+
+Where `mykey.p12` is the resulting private key and certificate for use
+in tools that do not use the JSON version.
+
+
