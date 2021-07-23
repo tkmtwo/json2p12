@@ -18,12 +18,19 @@
 
 # The "java key file" full path
 jkfilename=$1
+newpassphrase=$2
 
 filedir=""
 filename=""
 filextension=""
 
-
+#
+# Insist on a new passphrase
+#
+if [ -z "$newpassphrase" ]; then
+  echo "Need a new passphrase";
+  exit 2;
+fi
 
 #
 # Some minimal file checks.
@@ -69,10 +76,17 @@ client_x509_cert_url=$(jq -r '.client_x509_cert_url' ${jkfilename})
 # Pull the client cert by private_key_id
 curl -s ${client_x509_cert_url} | jq -r .\"${private_key_id}\" > ${filedir}/${filename}.cert
 
-# Export
+#Change the private key passphrase
+openssl rsa -des3 \
+        -in ${filedir}/${filename}.key \
+        -out ${filedir}/${filename}-new.key \
+        -passin pass:notasecret -passout pass:$newpassphrase
+
+# Export using new passphrase for p12 container
 openssl pkcs12 -export \
-	-password pass:notasecret \
-	-inkey ${filedir}/${filename}.key \
+	-passin pass:"$newpassphrase" \
+	-password pass:"$newpassphrase" \
+	-inkey ${filedir}/${filename}-new.key \
 	-in ${filedir}/${filename}.cert \
 	-out ${filedir}/${filename}.p12
 
