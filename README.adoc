@@ -31,7 +31,7 @@ After you start the container, you can use `json2p12` to convert.
 +
 [source,bash]
 ----
-json2p12 mykey.json
+json2p12 mykey.json mynewpassphrase
 ----
 
 Three new files will be created:
@@ -40,6 +40,7 @@ Three new files will be created:
 
 mykey.cert
 mykey.key
+mykey-new.key
 mykey.p12
 
 ----
@@ -47,5 +48,7 @@ mykey.p12
 
 Where `mykey.p12` is the resulting private key and certificate for use
 in tools that do not use the JSON version.
+
+Both the p12 container and private key have passphrases changed.
 
 
